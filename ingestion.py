@@ -56,6 +56,13 @@ class GetS3Data:
             if query_status in INGESTION_FAILED_STATUSES or time.time() > timeout:
                 raise Exception('Interact Analytics query failed or was cancelled.')
             time.sleep(0.5)
+            
+    def write(self):
+        self.get_query_results()\
+            .write\
+            .mode('append')\
+            .format('json')\
+            .save('your/file/path')
 
     def get_query_results(self):
         response = self.client.get_query_results(
@@ -82,10 +89,3 @@ class GetS3Data:
             except:
                 output = _df
         return output
-
-    def write(self):
-        self.get_query_results()\
-            .write\
-            .mode('append')\
-            .format('json')\
-            .save('your/file/path')
